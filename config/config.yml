@@ -77,7 +77,8 @@ detect:
     max_frames:
       default: 3000
       objects:
-        person: 1000
+        car: 1000
+        plate: 1000
   annotation_offset: 0
 
 record:
@@ -95,13 +96,15 @@ record:
     pre_capture: 10
     post_capture: 10
     objects:
-      - person
+      - car
+      - plate
     required_zones: []
     retain:
       default: 10
       mode: motion
       objects:
-        person: 15
+        car: 15
+        plate: 15
 
 snapshots:
   enabled: True
@@ -114,7 +117,8 @@ snapshots:
   retain:
     default: 10
     objects:
-      person: 15
+      car: 15
+      plate: 15
   quality: 70
 
 rtmp:
@@ -148,17 +152,6 @@ cameras:
       stream_name: outdoor_rtsp_cam_sub
     best_image_timeout: 60
     webui_url: ""
-    zones:
-      front_steps:
-        coordinates: 545,1077,747,939,788,805
-        inertia: 3
-        objects:
-          - person
-        filters:
-          person:
-            min_area: 5000
-            max_area: 100000
-            threshold: 0.7
 
     mqtt:
       enabled: True
@@ -182,13 +175,6 @@ cameras:
         enabled: False
         calibrate_on_startup: False
         zooming: disabled
-        zoom_factor: 0.3
-        track:
-          - person
-        required_zones:
-          - zone_name
-        return_preset: home
-        timeout: 10
 
     birdseye:
       order: 0
