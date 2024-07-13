@@ -66,6 +66,11 @@ ffmpeg:
     rtmp: preset-rtmp-generic
   retry_interval: 10
 
+objects:
+  track:
+    - car
+    - plate
+
 detect:
   fps: 5
   enabled: True
