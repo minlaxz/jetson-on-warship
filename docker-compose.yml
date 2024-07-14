@@ -3,6 +3,7 @@ services:
     container_name: mqtt
     image: eclipse-mosquitto:latest
     restart: unless-stopped
+    runtime: "nvidia"
     ports:
       - "1883:1883"
       - "9001:9001"
@@ -16,7 +17,8 @@ services:
     privileged: true # this may not be necessary for all setups
     restart: unless-stopped
     image: ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp4
-    shm_size: "134mb" 
+    shm_size: "134mb"
+    runtime: "nvidia"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config:/config
