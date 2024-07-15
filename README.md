@@ -7,21 +7,19 @@ sudo apt-get update && sudo apt-get upgrade -y
 ```
 
 #### 1.Change docker's default runtime to `nvidia`
+`sudo vim /etc/docker/daemon.json`
 ```
 {
-    "runtimes": {
-        "nvidia": {
-            "path": "nvidia-container-runtime",
-            "runtimeArgs": []
-        }
-    },
-    "default-runtime": "nvidia"
+    ...
+    "default-runtime": "nvidia" <<< Add this line
 }
 ```
 `sudo systemctl restart docker`
 
 #### 2.Add current user to docker group
-`sudo usermod -aG docker $USER && newgrp docker`
+```sh
+sudo usermod -aG docker $USER && newgrp docker
+```
 
 Test: `docker ps`
 
