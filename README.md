@@ -1,7 +1,7 @@
 ### jetson-on-warship
-Frigate NVR running on Jetson Nano (JP4) - A working configuration using Deepstask as detector.
+Running Frigate NVR on Jetson Nano (JP4) - A working configuration using Deepstask as a detector.
 
-#### Change docker's default runtime to nvidia
+#### 1.Change docker's default runtime to `nvidia`
 ```
 {
     "runtimes": {
@@ -15,17 +15,17 @@ Frigate NVR running on Jetson Nano (JP4) - A working configuration using Deepsta
 ```
 `sudo systemctl restart docker`
 
-#### Add current user to docker group
+#### 2.Add current user to docker group
 `sudo usermod -aG docker $USER && newgrp docker`
 
 Test: `docker ps`
 
-#### Download docker-compose
+#### 3.Download docker-compose
 `curl -x "http://192.168.1.125:2080" -fsSL https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-aarch64 -o docker-compose`
 
-_Since in Myanmar, IDK why tf GFW is blocking githubusercontent.com, so I need to use a proxy in `curl` command's `-x` option._
+_In Myanmar, IDK why tf GFW is blocking githubusercontent.com, I need to use a proxy in the `curl` command's `-x` option to reach to._
 
-#### Install docker-compose
+#### 4.Install docker-compose
 
 `DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}`
 
