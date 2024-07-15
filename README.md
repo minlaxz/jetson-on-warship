@@ -1,5 +1,5 @@
 ### jetson-on-warship
-Running Frigate NVR on Jetson Nano (JP4) - A working configuration using Deepstask as a detector.
+Running [Frigate](https://github.com/blakeblackshear/frigate) NVR on Jetson Nano (JP4) - A working configuration using Deepstask as a detector.
 
 #### 0.Update and Upgrade
 ```sh
