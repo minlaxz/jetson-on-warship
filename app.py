@@ -36,7 +36,27 @@ def predict(model):
             results = models[model](
                 im, size=640
             )  # reduce size=320 for faster inference
-            return results.pandas().xyxy[0].to_json(orient="records")
+            records = results.pandas().xyxy[0].to_json(orient="records")
+            return (
+                {
+                    "success": True,
+                    "predictions": [
+                        {
+                            "label": r["name"],
+                            "confidence": r["confidence"],
+                            "x_min": r["xmin"],
+                            "y_min": r["ymin"],
+                            "x_max": r["xmax"],
+                            "y_max": r["ymax"],
+                        }
+                        for r in records
+                    ],
+                    # "duration": results.imgs[0].get("pred_time"),
+                    "duration": 0,
+                }
+                if len(records)
+                else {"success": False, "predictions": []}
+            )
 
 
 if __name__ == "__main__":
