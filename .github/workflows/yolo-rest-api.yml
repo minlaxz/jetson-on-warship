@@ -1,4 +1,4 @@
-name: Build and Push Deepstask Base
+name: Build and Push Yolo Rest API
 
 on:
   workflow_dispatch:
