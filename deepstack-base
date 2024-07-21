@@ -2,6 +2,6 @@ FROM nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.10-py3
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1A127079A92F09ED
 RUN apt-get update -y
-RUN apt-get install redis-server -y 
+RUN apt-get install redis-server nmap -y 
 RUN pip3 install --upgrade setuptools pip
 RUN apt-get install libsm6 libxext6 libxrender1 libglib2.0-0 ffmpeg openmpi-bin libopenmpi-dev -y
