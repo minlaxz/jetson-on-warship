@@ -60,3 +60,31 @@ copying a folder into `SCRIPT_DIR` which is `SCRIPT_DIR="/usr/local/src/tensorrt
 Now this [docker/tensorrt/detector/rootfs/etc/s6-overlay/s6-rc.d/trt-model-prepare/run](https://github.com/blakeblackshear/frigate/blob/b7cf5f4105e3b89eaaac5adddf00ade1c704597d/docker/tensorrt/detector/rootfs/etc/s6-overlay/s6-rc.d/trt-model-prepare/run#L77-L80) make sense, it's actually calling this [script](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/download_yolo.sh)
 
 And again in the script, it runs `wget` to these `raw.githubusercontent.com` domains which are blocked by GFW.
+
+### Setup Ultralytics Yolo v5 [Ref](https://docs.ultralytics.com/guides/nvidia-jetson/#best-practices-when-using-nvidia-jetson)
+
+```bash
+sudo nvpmodel -m 0
+sudo jetson_clocks
+sudo apt update
+sudo pip install jetson-stats
+sudo reboot
+jtop
+```
+
+### Export .pt to .engine (TRT model)
+```python
+from ultralytics import YOLO
+
+# Load a YOLOv8n PyTorch model
+model = YOLO("yolov8n.pt")
+
+# Export the model
+model.export(format="engine")  # creates 'yolov8n.engine'
+
+# Load the exported TensorRT model
+trt_model = YOLO("yolov8n.engine")
+
+# Run inference
+results = trt_model("https://ultralytics.com/images/bus.jpg")
+```

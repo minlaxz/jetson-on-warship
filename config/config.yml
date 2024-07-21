@@ -13,9 +13,9 @@ mqtt:
 
 detectors:
   deepstack:
-    api_url: http://frigate-deepstack:5000/v1/vision/detection
+    api_url: http://frigate-lightstack:5000/v1/object-detection/car-plate
     type: deepstack
-    api_timeout: 10 # seconds
+    api_timeout: 3 # seconds
 
 database:
   path: /config/frigate.db

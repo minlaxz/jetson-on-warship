@@ -52,7 +52,11 @@ if __name__ == "__main__":
 
     for m in opt.model:
         models[m] = torch.hub.load(
-            "ultralytics/yolov5", m, force_reload=True, skip_validation=True
+            "ultralytics/yolov5",
+            "custom",
+            f"/app/models/{m}",
+            force_reload=True,
+            skip_validation=True,
         )
 
     app.run(host="0.0.0.0", port=opt.port)  # debug=True causes Restarting with stat

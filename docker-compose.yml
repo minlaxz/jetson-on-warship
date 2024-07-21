@@ -2,7 +2,7 @@ services:
   frigate-mqtt:
     image: eclipse-mosquitto:latest
     # network_mode: "host" # should be uncommented at first-time startup
-    # runtime: "nvidia" # optional
+    runtime: "nvidia"
     restart: unless-stopped
     ports:
       - "1883:1883"
@@ -15,7 +15,7 @@ services:
   frigate:
     image: ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp4
     # network_mode: "host" # should be uncommented at first-time startup
-    # runtime: "nvidia" # optional
+    runtime: "nvidia"
     privileged: true # this may not be necessary for all setups
     restart: unless-stopped
     shm_size: "134mb"
@@ -35,16 +35,12 @@ services:
     environment:
       FRIGATE_RTSP_PASSWORD: "examplepassword"
   
-  frigate-deepstack:
-    image: deepquestai/deepstack:jetpack-2022.01.1
+  frigate-lightstack:
+    image: ghcr.io/minlaxz/frigate-on-warship:yolo-rest-api
     # network_mode: "host" # should be uncommented at first-time startup
-    # runtime: "nvidia" # optional
+    runtime: "nvidia"
     restart: unless-stopped
-    environment:
-      VISION-DETECTION: true
-      # MODE: High # Default is Medium
     ports:
       - "5001:5000"
     volumes:
-      - ./datastore:/datastore
-      - ./custom-models:/modelstore/detection
+      - ./models:/app/models
