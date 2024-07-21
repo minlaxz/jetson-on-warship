@@ -2,6 +2,7 @@ FROM ultralytics/ultralytics:latest-jetson-jetpack4
 
 WORKDIR /app
 RUN mkdir /app/models
+RUN mkdir -p /root/.cache/torch/hub/
 
 RUN apt-get update \
     && apt-get install -y \
