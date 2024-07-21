@@ -1,5 +1,6 @@
 FROM nvcr.io/nvidia/l4t-pytorch:r32.7.1-pth1.10-py3
 
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
 RUN apt-get update -y
 RUN apt-get install redis-server -y 
 RUN pip3 install --upgrade setuptools pip
