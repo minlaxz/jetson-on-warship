@@ -3,4 +3,4 @@
 
 docker pull eclipse-mosquitto:latest
 docker pull ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp4
-docker pull ultralytics/ultralytics:latest-jetson-jetpack4
+docker pull ghcr.io/minlaxz/jetson-on-warship:yolo-rest-api
