@@ -40,6 +40,6 @@ jobs:
           cache-to: type=gha,mode=max
           context: .
           file: Dockerfile
-          tags: ghcr.io/minlaxz/frigate-on-warship:yolo-rest-api
+          tags: ghcr.io/minlaxz/lightstack-api:yolov5-jp4
           build-args: |
             BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
