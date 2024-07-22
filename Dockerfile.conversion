@@ -1,0 +1,14 @@
+# Use the ultralytics image that includes YOLOv8 and export capabilities
+FROM ultralytics/ultralytics:latest-jetson-jetpack4
+
+WORKDIR /app
+
+# Copy models from the repository to the container
+COPY ./models /app/models
+
+# Export all .pt models to .engine format
+CMD for model in /app/models/*.pt; do \
+      model_name=$(basename "$model" .pt); \
+      yolo export model="$model" format=engine --device 0; \
+      mv "$model_name.engine" /app/models/; \
+    done

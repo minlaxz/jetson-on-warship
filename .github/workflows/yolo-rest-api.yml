@@ -1,4 +1,4 @@
-name: Build and Push Yolo Rest API
+name: Build and Push TOLO REST API
 
 on:
   workflow_dispatch:

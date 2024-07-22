@@ -3,19 +3,19 @@
 
 import argparse
 import io
+import os
 
 import torch
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from PIL import Image
 
-app = Flask(__name__)
+lightstack = Flask(__name__)
 models = {}
 
-DETECTION_URL = "/v1/object-detection/<model>"
+DETECTION_URL = "/v1/object-detection/<model_name>"
 
-
-@app.route(DETECTION_URL, methods=["POST"])
-def predict(model):
+@lightstack.route(DETECTION_URL, methods=["POST"])
+def predict(model_name):
     """Predict and return object detections in JSON format given an image and model name via a Flask REST API POST
     request.
     """
@@ -23,60 +23,70 @@ def predict(model):
         return
 
     if request.files.get("image"):
-        # Method 1
-        # with request.files["image"] as f:
-        #     im = Image.open(io.BytesIO(f.read()))
-
-        # Method 2
+        # Read the image from the request
         im_file = request.files["image"]
         im_bytes = im_file.read()
         im = Image.open(io.BytesIO(im_bytes))
 
-        if model in models:
-            results = models[model](
+        # Check if the model is loaded
+        if model_name in models:
+            # Perform prediction
+            results = models[model_name](
                 im, size=640
             )  # reduce size=320 for faster inference
-            records = results.pandas().xyxy[0].to_json(orient="records")
-            return (
+            
+            # Convert results to JSON
+            records = results.pandas().xyxy[0].to_dict(orient="records")
+            predictions = [
                 {
-                    "success": True,
-                    "predictions": [
-                        {
-                            "label": r["name"],
-                            "confidence": r["confidence"],
-                            "x_min": r["xmin"],
-                            "y_min": r["ymin"],
-                            "x_max": r["xmax"],
-                            "y_max": r["ymax"],
-                        }
-                        for r in records
-                    ],
-                    # "duration": results.imgs[0].get("pred_time"),
-                    "duration": 0,
+                    "label": r["name"],
+                    "confidence": r["confidence"],
+                    "x_min": r["xmin"],
+                    "y_min": r["ymin"],
+                    "x_max": r["xmax"],
+                    "y_max": r["ymax"],
                 }
-                if len(records)
-                else {"success": False, "predictions": []}
-            )
+                for r in records
+            ]
 
+            return jsonify({
+                "success": True,
+                "predictions": predictions,
+                "duration": 0,  # Optionally calculate duration
+            })
+
+    return jsonify({"success": False, "predictions": []})
+
+def load_models(models_dir):
+    """Load all YOLOv5 models from a given directory."""
+    model_files = [
+        f for f in os.listdir(models_dir) if f.endswith('.engine')
+    ]
+    for model_file in model_files:
+        model_path = os.path.join(models_dir, model_file)
+        model_name = os.path.splitext(model_file)[0]  # Use filename without extension as model name
+        print(f"Loading model: {model_name} from {model_path}")
+        
+        # Load the model using torch.hub
+        models[model_name] = torch.hub.load(
+            "ultralytics/yolov5",
+            "custom",
+            path=model_path,
+            force_reload=True,
+            skip_validation=True,
+        )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Flask API exposing YOLOv5 model")
     parser.add_argument("--port", default=5000, type=int, help="port number")
     parser.add_argument(
-        "--model",
-        nargs="+",
-        default=["yolov5s"],
-        help="model(s) to run, i.e. --model yolov5n yolov5s",
+        "--models-dir",
+        default="/app/models/",
+        help="directory containing model files",
     )
     opt = parser.parse_args()
 
-    for m in opt.model:
-        models[m] = torch.hub.load(
-            "ultralytics/yolov5",
-            "custom",
-            f"/app/models/{m}",
-            force_reload=True,
-            skip_validation=True,
-        )
+    # Load all models from the specified directory
+    load_models(opt.models_dir)
 
-    app.run(host="0.0.0.0", port=opt.port)  # debug=True causes Restarting with stat
+    lightstack.run(host="0.0.0.0", port=opt.port)  # debug=True causes Restarting with stat
