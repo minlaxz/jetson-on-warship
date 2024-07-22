@@ -7,6 +7,6 @@ WORKDIR /app
 COPY ./models /app/models
 COPY convert_models.py /app/convert_models.py
 
-RUN pip insatll -U pip && pip install -r yolov5/requirements.txt
+RUN pip install -U pip && pip install -r yolov5/requirements.txt
 
 CMD ["python3", "/app/convert_models.py"]
