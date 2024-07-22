@@ -8,7 +8,7 @@ def convert_models_to_engine(models_dir):
             model = YOLO(model_path)
             engine_path = model_path.replace('.pt', '.engine')
             print(f"Converting {model_path} to {engine_path}")
-            model.export(format='engine', device="cpu")
+            model.export(format='engine')
 
 if __name__ == "__main__":
     models_directory = "/app/models"
