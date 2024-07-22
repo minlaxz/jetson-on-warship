@@ -11,6 +11,6 @@ RUN python3 -m pip install -U pip && python3 -m pip install -r /app/yolov5/requi
 # CMD ["python3", "/app/exporter.py"]
 CMD for model in /app/models/*.pt; do \
       model_name=$(basename "$model" .pt); \
-      python3 /app/yolov5/export.py --weights "$model" --include engine --device 0 --imgsz (640, 480); \
+      python3 /app/yolov5/export.py --weights "$model" --include engine --device 0 --imgsz \(640, 480\); \
       mv "$model_name.engine" /app/models/; \
     done
