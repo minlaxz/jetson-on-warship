@@ -19,4 +19,6 @@ RUN pip3 install -r requirements.txt
 
 RUN curl -fsSL https://github.com/ultralytics/yolov5/archive/master.zip -o /root/.cache/torch/hub/master.zip
 
+ENV MODELS_DIR=/app/models
+
 CMD ["gunicorn", "-w", "4", "--threads", "2", "-b", "0.0.0.0:5000", "app:lightstack"]
