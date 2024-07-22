@@ -22,7 +22,7 @@ jobs:
 
       - name: Build and Run Conversion in Docker
         run: |
-          docker build -t yolo-conversion -f Dockerfile.coversion .
+          docker build --platform=linux/arm64 -t yolo-conversion -f Dockerfile.coversion .
           docker run --platform=linux/arm64 --rm -v $PWD/models:/app/models yolo-conversion
 
       - name: Commit and push converted models
