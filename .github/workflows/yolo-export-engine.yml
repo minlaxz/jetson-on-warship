@@ -46,7 +46,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
-          file: Dockerfile.conversion
+          file: Dockerfile.exporter
           tags: ghcr.io/minlaxz/frigate-on-warship:yolo-engine-exporter
           build-args: |
             BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
