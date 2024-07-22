@@ -1,4 +1,4 @@
-name: Build and Push YOLO REST API
+name: Build and Push YOLO Exporter
 
 on:
   workflow_dispatch:
@@ -18,16 +18,26 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Checkout ultralytics/yolov5 repo
+        uses: actions/checkout@v4
+        with:
+          repository: ultralytics/yolov5
+          path: yolov5
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -36,7 +46,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
-          file: Dockerfile
-          tags: ghcr.io/minlaxz/frigate-on-warship:yolo-rest-api
+          file: Dockerfile.conversion
+          tags: ghcr.io/minlaxz/frigate-on-warship:yolo-engine-exporter
           build-args: |
             BUILDKIT_CONTEXT_KEEP_GIT_DIR=1
