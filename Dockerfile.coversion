@@ -5,10 +5,8 @@ WORKDIR /app
 
 # Copy models from the repository to the container
 COPY ./models /app/models
+COPY convert_models.py /app/convert_models.py
 
-# Export all .pt models to .engine format
-CMD for model in /app/models/*.pt; do \
-      model_name=$(basename "$model" .pt); \
-      yolo export model="$model" format=engine device=0; \
-      mv "$model_name.engine" /app/models/; \
-    done
+RUN pip insatll -U pip && pip install -r yolov5/requirements.txt
+
+CMD ["python3", "/app/convert_models.py"]
