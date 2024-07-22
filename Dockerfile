@@ -21,4 +21,4 @@ RUN pip3 install -r requirements.txt
 
 ENV MODELS_DIR=/app/models
 
-CMD ["gunicorn", "-w", "4", "--threads", "2", "-b", "0.0.0.0:5000", "app:lightstack"]
+CMD ["gunicorn", "-w", "1", "--threads", "2", "-b", "0.0.0.0:5000", "app:lightstack"]
