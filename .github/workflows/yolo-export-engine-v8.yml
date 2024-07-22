@@ -1,4 +1,4 @@
-name: Build and Push YOLO Exporter
+name: Build and Push YOLO Exporter for YOLOv8
 
 on:
   workflow_dispatch:
@@ -18,13 +18,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Checkout ultralytics/yolov5 repo
-        uses: actions/checkout@v4
-        with:
-          repository: ultralytics/yolov5
-          path: yolov5
-
+      
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v3
 
@@ -46,7 +40,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
-          file: Dockerfile.exporter
-          tags: ghcr.io/minlaxz/engine-exporter:yolov5-jp4
+          file: Dockerfile.exporter.v8
+          tags: ghcr.io/minlaxz/engine-exporter:yolov8-jp4
           build-args: |
             BUILDKIT_CONTEXT_KEEP_GIT_DIR=1

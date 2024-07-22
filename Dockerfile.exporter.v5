@@ -4,10 +4,13 @@ FROM ultralytics/ultralytics:latest-jetson-jetpack4
 WORKDIR /app
 
 # Copy models from the repository to the container
-COPY ./models /app/models
-COPY exporter.py /app/exporter.py
-COPY yolov5 /app/yolov5
+COPY ./yolov5 /app/yolov5
 
 RUN python3 -m pip install -U pip && python3 -m pip install -r /app/yolov5/requirements.txt
 
-CMD ["python3", "/app/exporter.py"]
+# CMD ["python3", "/app/exporter.py"]
+CMD for model in /app/models/*.pt; do \
+      model_name=$(basename "$model" .pt); \
+      python3 /app/yolo5/export.py --weights "$model" --include engine; \
+      mv "$model_name.engine" /app/models/; \
+    done

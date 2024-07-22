@@ -72,7 +72,11 @@ sudo reboot
 jtop
 ```
 
+---
+
 ### Export .pt to .engine (TRT model)
+
+> Without Docker
 ```python
 from ultralytics import YOLO
 
@@ -87,4 +91,9 @@ trt_model = YOLO("yolov8n.engine")
 
 # Run inference
 results = trt_model("https://ultralytics.com/images/bus.jpg")
+```
+
+> With Docker
+```bash
+docker run --rm --network host -v $(pwd)/models:/app/models ghcr.io/minlaxz/engine-exporter:yolov5-jp4
 ```
