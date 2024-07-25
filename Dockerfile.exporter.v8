@@ -5,6 +5,6 @@ WORKDIR /app
 
 CMD for model in /app/models/*.pt; do \
       model_name=$(basename "$model" .pt); \
-      yolo export model="$model" format=engine device=0; \
+      yolo export model="$model" format=engine int8=True device=0; \
       mv "$model_name.engine" /app/models/; \
     done

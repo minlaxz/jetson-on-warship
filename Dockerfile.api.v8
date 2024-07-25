@@ -12,7 +12,7 @@ RUN apt-get update \
     && apt-get clean
 
 COPY ./requirements.txt requirements.txt
-COPY ./app.py app.py
+COPY ./app_v8.py app.py
 
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
