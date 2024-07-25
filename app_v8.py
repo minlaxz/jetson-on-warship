@@ -4,7 +4,7 @@
 import argparse
 import io
 import os
-
+import json
 from ultralytics import YOLO
 from flask import Flask, request, jsonify
 from PIL import Image
@@ -32,33 +32,33 @@ def predict(model_name):
         # Check if the model is loaded
         if model_name in models:
             # Perform prediction
-            results = models[model_name](
-                im, imgsz=640
+            results = models[model_name].predict(
+                im, imgsz=(480,640), conf=0.5
             )  # reduce size=320 for faster inference
 
             # Convert results to JSON
-            records = results[0].boxes
-            # predictions = (
-            #     [
-            #         {
-            #             "label": r["name"],
-            #             "confidence": r["confidence"],
-            #             "x_min": r["xmin"],
-            #             "y_min": r["ymin"],
-            #             "x_max": r["xmax"],
-            #             "y_max": r["ymax"],
-            #         }
-            #         for r in records
-            #     ]
-            #     if len(records) > 0
-            #     else []
-            # )
+            records = json.loads(results[0].tojson())
+            predictions = (
+                [
+                    {
+                        "label": r["name"],
+                        "confidence": r["confidence"],
+                        "x_min": r["box"]["x1"],
+                        "y_min": r["box"]["y1"],
+                        "x_max": r["box"]["x2"],
+                        "y_max": r["box"]["y2"],
+                    }
+                    for r in records
+                ]
+                if len(records) > 0
+                else []
+            )
 
             return jsonify(
                 {
                     "success": True if len(records) > 0 else False,
-                    "predictions": records,
-                    "duration": 0,  # Optionally calculate duration
+                    "predictions": predictions,
+                    "duration": results[0].speed,  # Optionally calculate duration
                 }
             )
 
@@ -78,7 +78,7 @@ def load_models(models_dir):
         print(f"Loading model: {model_name} from {model_path}")
 
         # Load the model using YOLOv8
-        models[model_name] = YOLO(model_path)
+        models[model_name] = YOLO(model_path, task="detect")
 
 
 def initialize_app():
