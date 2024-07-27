@@ -34,6 +34,10 @@ services:
       - "8555:8555/udp" # WebRTC over udp
     environment:
       FRIGATE_RTSP_PASSWORD: "examplepassword"
+      YOLO_MODELS: ""
+    depends_on:
+      - frigate-mqtt
+      - frigate-lightstack
   
   frigate-lightstack:
     image: ghcr.io/minlaxz/lightstack-api:yolov8-jp4

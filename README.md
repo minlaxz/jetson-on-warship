@@ -1,7 +1,13 @@
-### jetson-on-warship
-Running [Frigate](https://github.com/blakeblackshear/frigate) NVR on Jetson Nano (JP4) - A working configuration using Deepstask as a detector.
+Ultralytics YOLOv8 as Frigate Detector in Docker on Jetson Nano
+===
 
-#### 0.Update and Upgrade
+[Frigate](https://github.com/blakeblackshear/frigate) NVR (Network Video Recorder) on Jetson Nano (JP4) - using YOLOv8 as a detector.
+
+> Frigate officially supports `Deepstack` as one of their Object detectors but Deepstack isn't actively maintained and here's yet another one, lightstack (only focusing on object detection) and trained on YOLOv8 nano model.
+
+### Setup Docker and Docker Compose
+
+#### 0.Super Duper `update` and `upgrade`
 ```sh
 sudo apt-get update && sudo apt-get upgrade -y
 ```
@@ -16,19 +22,17 @@ sudo apt-get update && sudo apt-get upgrade -y
 ```
 `sudo systemctl restart docker`
 
-#### 2.Add current user to docker group
+#### 2.Add current `user` to `docker group`
 ```sh
 sudo usermod -aG docker $USER && newgrp docker
 ```
-
-Test: `docker ps`
 
 #### 3.Download docker-compose
 ```sh
 curl -x "http://192.168.1.125:2080" -fsSL https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-aarch64 -o docker-compose
 ```
 
-_In Myanmar, IDK why tf GFW is blocking githubusercontent.com, I need to use a proxy in the `curl` command's `-x` option to reach to._
+_In Myanmar, IDK why **Great Firewall** is blocking `githubusercontent.com`, so I need to use a proxy in the `curl` command's `-x` option to bypass GFW._
 
 #### 4.Install docker-compose
 
@@ -38,47 +42,22 @@ mkdir -p $DOCKER_CONFIG/cli-plugins
 cp docker-compose $DOCKER_CONFIG/cli-plugins/
 chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 ```
-Test: `docker compose version`
+---
+
+### Ultralytics YOLOv8 on Jetson nano using Docker [ref](https://docs.ultralytics.com/guides/nvidia-jetson/#best-practices-when-using-nvidia-jetson)
 
 
-The problem is I cannot start the container.
-
-#### Digging into Frigate container startup.
-First, this [docker/tensorrt/detector/rootfs/etc/s6-overlay/s6-rc.d/trt-model-prepare/run](https://github.com/blakeblackshear/frigate/blob/b7cf5f4105e3b89eaaac5adddf00ade1c704597d/docker/tensorrt/detector/rootfs/etc/s6-overlay/s6-rc.d/trt-model-prepare/run#L80) which will run right after "Downloading yolo weights" prompt.
-
-```
-The script "download_yolo.sh" is not in the Frigate repository so it must be from somewhere else.
-```
-
-Second, this [docker/tensorrt/detector/tensorrt_libyolo.sh](https://github.com/blakeblackshear/frigate/blob/b7cf5f4105e3b89eaaac5adddf00ade1c704597d/docker/tensorrt/detector/tensorrt_libyolo.sh#L8)
-is downloading another repository from [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos/tree/master)
-
-
-Third, this [docker/tensorrt/detector/tensorrt_libyolo.sh](https://github.com/blakeblackshear/frigate/blob/b7cf5f4105e3b89eaaac5adddf00ade1c704597d/docker/tensorrt/detector/tensorrt_libyolo.sh#L21)
-copying a folder into `SCRIPT_DIR` which is `SCRIPT_DIR="/usr/local/src/tensorrt_demos"`
-
-Now this [docker/tensorrt/detector/rootfs/etc/s6-overlay/s6-rc.d/trt-model-prepare/run](https://github.com/blakeblackshear/frigate/blob/b7cf5f4105e3b89eaaac5adddf00ade1c704597d/docker/tensorrt/detector/rootfs/etc/s6-overlay/s6-rc.d/trt-model-prepare/run#L77-L80) make sense, it's actually calling this [script](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/download_yolo.sh)
-
-And again in the script, it runs `wget` to these `raw.githubusercontent.com` domains which are blocked by GFW.
-
-### Setup Ultralytics Yolo v5 [Ref](https://docs.ultralytics.com/guides/nvidia-jetson/#best-practices-when-using-nvidia-jetson)
-
+#### 0.Best practices
 ```bash
-sudo nvpmodel -m 0
+sudo nvpmodel -m 0 # Running in MAX_5A
 sudo jetson_clocks
-sudo apt update
-sudo pip install jetson-stats
+sudo apt update && sudo pip3 install jetson-stats
 sudo reboot
 jtop
 ```
 
----
-
-### Export .pt to .engine (TRT model)
-
-#### Using YOLOv8
-
-> Without Docker
+#### 1.Ultralytics YOLOv8
+_Export .pt to .engine first if you're using with Nvidia devices for better performance._
 ```python
 from ultralytics import YOLO
 
@@ -93,28 +72,26 @@ trt_model = YOLO("yolov8n.engine")
 
 # Run inference
 results = trt_model("https://ultralytics.com/images/bus.jpg")
-
-```
-> With Docker
-```bash
-docker run --rm -it --runtime nvidia --network host -v $(pwd)/models:/app/models ghcr.io/minlaxz/engine-exporter:yolov5-jp4
 ```
 
-#### Using YOLOv5
+#### 2.Running lightstack-api
 
-> Without Docker
-```python
-python3 export.py --weights car-plate.pt --include engine --device 0
-```
-
-> With Docker
-```bash
-docker run --rm -it --runtime nvidia --network host -v $(pwd)/models:/app/models ghcr.io/minlaxz/engine-exporter:yolov5-jp4
-```
-
-
-### Running lightstack
 
 ```bash
-docker run --rm -it --runtime nvidia --network host -v $(pwd)/models:/app/models ghcr.io/minlaxz/lightstack-api:yolov5-jp4
+docker run --rm -it --runtime nvidia --network host --ipc host -v $(pwd)/models:/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4
+```
+---
+
+Citation
+
+```BibTeX
+@software{yolov8_ultralytics,
+  author = {Glenn Jocher and Ayush Chaurasia and Jing Qiu},
+  title = {Ultralytics YOLOv8},
+  version = {8.0.0},
+  year = {2023},
+  url = {https://github.com/ultralytics/ultralytics},
+  orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
+  license = {AGPL-3.0}
+}
 ```
