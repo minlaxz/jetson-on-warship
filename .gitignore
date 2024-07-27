@@ -1,0 +1,4 @@
+*.zip
+*.pth
+**/en_sample/**
+**/custom_example/**

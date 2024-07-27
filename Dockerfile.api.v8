@@ -9,11 +9,19 @@ RUN apt-get update \
     vim \
     nmap \
     curl \
+    unzip \
     && apt-get clean
 
 COPY ./requirements.txt requirements.txt
 COPY ./app_v8.py app.py
-COPY ./models/easyocr /app/models/easyocr
+
+RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip -o /app/models/easyocr/craft_mlt_25k.zip
+RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip -o /app/models/easyocr/english_g2.zip
+
+RUN unzip /app/models/easyocr/craft_mlt_25k.zip -d /app/models/easyocr/
+RUN unzip /app/models/easyocr/english_g2.zip -d /app/models/easyocr/
+
+RUN rm /app/models/easyocr/craft_mlt_25k.zip && rm /app/models/easyocr/english_g2.zip
 
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
