@@ -13,6 +13,7 @@ RUN apt-get update \
 
 COPY ./requirements.txt requirements.txt
 COPY ./app_v8.py app.py
+COPY ./models/easyocr /app/models/easyocr
 
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt

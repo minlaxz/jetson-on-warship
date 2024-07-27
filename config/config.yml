@@ -13,7 +13,7 @@ mqtt:
 
 detectors:
   deepstack:
-    api_url: http://frigate-lightstack:5000/v1/object-detection/car-plate
+    api_url: http://frigate-lightstack:5000/v1/object-detection/yolov8-nano-best
     type: deepstack
     api_timeout: 3 # seconds
 
