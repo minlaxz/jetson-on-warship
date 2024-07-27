@@ -36,7 +36,7 @@ services:
       FRIGATE_RTSP_PASSWORD: "examplepassword"
   
   frigate-lightstack:
-    image: ghcr.io/minlaxz/frigate-on-warship:yolo-rest-api
+    image: ghcr.io/minlaxz/lightstack-api:yolov8-jp4
     # network_mode: "host" # should be uncommented at first-time startup
     runtime: "nvidia"
     restart: unless-stopped

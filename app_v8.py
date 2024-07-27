@@ -8,22 +8,22 @@ import json
 from ultralytics import YOLO
 from flask import Flask, request, jsonify
 from PIL import Image
-import easyocr
-import numpy as np
+# import easyocr
+# import numpy as np
 
 lightstack = Flask(__name__)
 models = {}
-readers = {}
+# readers = {}
 
 
 DETECTION_URL = "/v1/object-detection/<model_name>"
 
 
-def get_ocr(image, model_name):
-    """Perform OCR on an image using the specified model name."""
-    image_np = np.array(image)
-    result = readers[model_name].readtext(image_np)
-    return result
+# def get_ocr(image, model_name):
+#     """Perform OCR on an image using the specified model name."""
+#     image_np = np.array(image)
+#     result = readers[model_name].readtext(image_np)
+#     return result
 
 
 @lightstack.route(DETECTION_URL, methods=["POST"])
@@ -66,17 +66,17 @@ def predict(model_name):
             )
 
             # Perform OCR on the detected objects
-            for i, pred in enumerate(predictions):
-                if pred["label"] == "plate":
-                    x_min, y_min, x_max, y_max = (
-                        pred["x_min"],
-                        pred["y_min"],
-                        pred["x_max"],
-                        pred["y_max"],
-                    )
-                    cropped_im = im.crop((x_min, y_min, x_max, y_max))
-                    text = get_ocr(cropped_im, model_name)
-                    predictions[i]["text"] = str(text)
+            # for i, pred in enumerate(predictions):
+            #     if pred["label"] == "plate":
+            #         x_min, y_min, x_max, y_max = (
+            #             pred["x_min"],
+            #             pred["y_min"],
+            #             pred["x_max"],
+            #             pred["y_max"],
+            #         )
+            #         cropped_im = im.crop((x_min, y_min, x_max, y_max))
+            #         text = get_ocr(cropped_im, model_name)
+            #         predictions[i]["text"] = str(text)
 
             return jsonify(
                 {
@@ -111,12 +111,12 @@ def load_models(models_dir):
         # Load the model using YOLOv8
         models[model_name] = YOLO(model_path, task="detect")
 
-        print("Loading OCR model")
-        readers[model_name] = easyocr.Reader(
-            ["en"],
-            model_storage_directory="/app/models/easyocr/",
-            download_enabled=False,
-        )
+        # print("Loading OCR model")
+        # readers[model_name] = easyocr.Reader(
+        #     ["en"],
+        #     model_storage_directory="/app/models/easyocr/",
+        #     download_enabled=False,
+        # )
 
 
 def initialize_app():
