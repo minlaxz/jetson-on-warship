@@ -1,27 +1,26 @@
 services:
   frigate-mqtt:
     image: eclipse-mosquitto:latest
-    # network_mode: "host" # should be uncommented at first-time startup
+    # network_mode: "host" # Should be uncommented at first-time startup
     runtime: "nvidia"
     restart: unless-stopped
     ports:
       - "1883:1883"
       - "9001:9001"
     volumes:
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - ./mosquitto/data:/mosquitto/data
-      - ./mosquitto/logs:/mosquitto/log/mosquitto.log:rw
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./logs:/mosquitto/log/mosquitto.log:rw
 
   frigate:
     image: ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp4
-    # network_mode: "host" # should be uncommented at first-time startup
+    # network_mode: "host" # Should be uncommented at first-time startup
     runtime: "nvidia"
-    privileged: true # this may not be necessary for all setups
+    privileged: true
     restart: unless-stopped
     shm_size: "134mb"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config:/config
+      - ./config/config.yml:/config/config.yml
       - ./storage:/media/frigate
       - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
         target: /tmp/cache
@@ -30,21 +29,18 @@ services:
     ports:
       - "5000:5000"
       - "8554:8554" # RTSP feeds
-      - "8555:8555/tcp" # WebRTC over tcp
-      - "8555:8555/udp" # WebRTC over udp
     environment:
-      FRIGATE_RTSP_PASSWORD: "examplepassword"
-      YOLO_MODELS: ""
+      YOLO_MODELS: "" # Do not download and generate any TRT model
     depends_on:
       - frigate-mqtt
       - frigate-lightstack
   
   frigate-lightstack:
     image: ghcr.io/minlaxz/lightstack-api:yolov8-jp4
-    # network_mode: "host" # should be uncommented at first-time startup
+    # network_mode: "host" # Should be uncommented at first-time startup
     runtime: "nvidia"
     restart: unless-stopped
     ports:
       - "5001:5000"
     volumes:
-      - ./models:/app/models
+      - ./config/model_cache:/app/models

@@ -1,4 +1,4 @@
-name: Build and Push YOLO REST API for YOLOv5
+name: YOLOv5 REST API
 
 on:
   workflow_dispatch:

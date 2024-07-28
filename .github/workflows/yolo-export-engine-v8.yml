@@ -1,4 +1,4 @@
-name: Build and Push YOLO Exporter for YOLOv8
+name: YOLOv8 Exporter
 
 on:
   workflow_dispatch:

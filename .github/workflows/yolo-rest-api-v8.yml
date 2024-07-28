@@ -1,4 +1,4 @@
-name: Build and Push YOLO REST API for YOLOv8
+name: YOLOv8 REST API
 
 on:
   workflow_dispatch:
@@ -40,7 +40,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
-          file: Dockerfile.api.v8
+          file: ./docker/Dockerfile.api.v8
           tags: ghcr.io/minlaxz/lightstack-api:yolov8-jp4
           build-args: |
             BUILDKIT_CONTEXT_KEEP_GIT_DIR=1

@@ -44,10 +44,18 @@ chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 ```
 ---
 
-### Ultralytics YOLOv8 on Jetson nano using Docker [ref](https://docs.ultralytics.com/guides/nvidia-jetson/#best-practices-when-using-nvidia-jetson)
+### Frigate Docker Image for Jetson Nano [Frigate REF](#)
+
+#### 0.Pull the Mosquitto and Frigate images
+```bash
+docker pull eclipse-mosquitto:latest
+docker pull ghcr.io/blakeblackshear/frigate:stable-tensorrt-jp4
+```
+
+### Ultralytics YOLOv8 for Jetson Nano [Ultralytics REF](https://docs.ultralytics.com/guides/nvidia-jetson/#best-practices-when-using-nvidia-jetson)
 
 
-#### 0.Best practices
+#### 0.First follow the best practices
 ```bash
 sudo nvpmodel -m 0 # Running in MAX_5A
 sudo jetson_clocks
@@ -56,29 +64,24 @@ sudo reboot
 jtop
 ```
 
-#### 1.Ultralytics YOLOv8
+#### 1.Export .pt to .engine using Ultralytics image
 _Export .pt to .engine first if you're using with Nvidia devices for better performance._
-```python
-from ultralytics import YOLO
+```bash
+docker run --rm -it --runtime nvidia --network host --shm-size 1gb --gpus all -v $(pwd)/config/model_cache:/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4 bash
 
-# Load a YOLOv8n PyTorch model
-model = YOLO("yolov8n.pt")
+yolo settings runs_dir="/app/models/runs" datasets_dir="/app/models/datasets" weights_dir="/app/models/runs/weights"
 
-# Export the model
-model.export(format="engine")  # creates 'yolov8n.engine'
+# yolo task=detect mode=export model=./yolov8-nano-best.pt format=engine data=license-plates/data.yaml int8=True imgsz=640 device=0
 
-# Load the exported TensorRT model
-trt_model = YOLO("yolov8n.engine")
-
-# Run inference
-results = trt_model("https://ultralytics.com/images/bus.jpg")
+# Since `int8` isn't supported in Ultralytics TRT version for this Jetson Nano, data.yml is unnecessary here.
+yolo task=detect mode=export model=./yolov8-nano-best.pt format=engine imgsz=640 device=0
 ```
 
 #### 2.Running lightstack-api
 
 
 ```bash
-docker run --rm -it --runtime nvidia --network host --ipc host -v $(pwd)/models:/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4
+docker run --rm -it --runtime nvidia --network host --ipc host -v $(pwd)/config/model_cache:/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4
 ```
 ---
 

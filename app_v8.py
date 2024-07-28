@@ -23,10 +23,8 @@ DETECTION_URL = "/v1/object-detection/<model_name>"
 def get_ocr(image, model_name):
     """Perform OCR on an image using the specified model name."""
     image_np = np.array(image)
-    image_gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
-    image_hist = cv2.equalizeHist(image_gray)
-    _, image_bin_thresh = cv2.threshold(image_hist, 120, 255, cv2.THRESH_BINARY) 
-    result = readers[model_name].readtext(image_bin_thresh)
+    image_zero = cv2.cvtColor(image_np, cv2.THRESH_TOZERO)
+    result = readers[model_name].readtext(image_zero)
     return result
 
 
