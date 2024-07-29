@@ -47,7 +47,7 @@ COPY --from=base /usr/src/app/requirements.txt .
 RUN pip3 install --no-cache /wheels/* && rm -rf /wheels
 
 # Copy the application
-COPY ./controller/* .
+COPY ./controller .
 
 RUN chown -R app:app .
 USER app
