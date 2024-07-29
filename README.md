@@ -67,9 +67,9 @@ jtop
 #### 1.Export .pt to .engine using Ultralytics image
 _Export .pt to .engine first if you're using with Nvidia devices for better performance._
 ```bash
-docker run --rm -it --runtime nvidia --network host --shm-size 1gb --gpus all -v $(pwd)/config/model_cache:/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4 bash
+docker run --rm -it --runtime nvidia --network host --shm-size 1gb --gpus all -v $(pwd)/config/model_cache:/home/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4 bash
 
-yolo settings runs_dir="/app/models/runs" datasets_dir="/app/models/datasets" weights_dir="/app/models/runs/weights"
+yolo settings runs_dir="/home/app/models/runs" datasets_dir="/home/app/models/datasets" weights_dir="/home/app/models/runs/weights"
 
 # yolo task=detect mode=export model=./yolov8-nano-best.pt format=engine data=license-plates/data.yaml int8=True imgsz=640 device=0
 
@@ -81,7 +81,7 @@ yolo task=detect mode=export model=./yolov8-nano-best.pt format=engine imgsz=640
 
 
 ```bash
-docker run --rm -it --runtime nvidia --network host --ipc host -v $(pwd)/config/model_cache:/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4
+docker run --rm -it --runtime nvidia --network host --ipc host -v $(pwd)/config/model_cache:/home/app/models ghcr.io/minlaxz/lightstack-api:yolov8-jp4
 ```
 ---
 

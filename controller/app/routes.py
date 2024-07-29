@@ -122,14 +122,14 @@ def load_models(models_dir):
         print("Loading OCR model")
         readers[model_name] = easyocr.Reader(
             ["en"],
-            model_storage_directory="/app/models/easyocr/",
+            model_storage_directory="/home/app/models/easyocr/",
             download_enabled=False,
         )
 
 
 def initialize_app():
     """Initialize the app, loading models and any other setup tasks."""
-    models_dir = os.environ.get("MODELS_DIR", "/app/models/")
+    models_dir = os.environ.get("MODELS_DIR", "/home/app/models/")
     load_models(models_dir)
 
 
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("--port", default=5000, type=int, help="port number")
     parser.add_argument(
         "--models-dir",
-        default="/app/models/",
+        default="/home/app/models/",
         help="directory containing model files",
     )
     opt = parser.parse_args()

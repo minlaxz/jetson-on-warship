@@ -21,12 +21,12 @@ WORKDIR /home/app
 ENV MODELS_DIR=/home/app/models
 
 # EasyOCR models
-RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip -o /craft_mlt_25k.zip
-RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip -o /english_g2.zip
 RUN mkdir -p /home/app/models/easyocr
-RUN unzip /craft_mlt_25k.zip -d /home/app/models/easyocr/
-RUN unzip /english_g2.zip -d /home/app/models/easyocr/
-RUN rm /craft_mlt_25k.zip /english_g2.zip
+RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip -o /home/app/models/easyocr/craft_mlt_25k.zip
+RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip -o /home/app/models/easyocr/english_g2.zip
+RUN unzip /home/app/models/easyocr/craft_mlt_25k.zip -d /home/app/models/easyocr/
+RUN unzip /home/app/models/easyocr/english_g2.zip -d /home/app/models/easyocr/
+RUN rm /home/app/models/easyocr/*.zip
 
 RUN rm -rf /usr/src/ultralytics/onnxruntime_gpu-1.8.0-cp38-cp38-linux_aarch64.whl \
     /usr/src/ultralytics/tensorrt-8.2.0.6-cp38-none-linux_aarch64.whl \
