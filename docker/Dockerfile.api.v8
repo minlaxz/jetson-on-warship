@@ -9,7 +9,7 @@ RUN apt-get update && \
     vim nmap curl unzip -yqq
 
 COPY ./requirements.txt .
-RUN python3 -m pip install --upgrade \
+RUN python3 -m pip install --upgrade pip \
     && pip3 wheel --no-cache-dir --no-deps \
     --wheel-dir /usr/src/app/wheels \
     -r requirements.txt
