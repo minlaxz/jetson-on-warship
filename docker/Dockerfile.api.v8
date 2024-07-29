@@ -20,7 +20,11 @@ FROM ultralytics/ultralytics:latest-jetson-jetpack4
 WORKDIR /home/app
 ENV MODELS_DIR=/home/app/models
 
-# EasyOCR models
+RUN apt-get update && \
+    apt-get install --no-install-recommends \
+    vim nmap curl unzip -yqq && rm -rf /var/lib/apt/lists/*
+
+    # EasyOCR models
 RUN mkdir -p /home/app/models/easyocr
 RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip -o /home/app/models/easyocr/craft_mlt_25k.zip
 RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip -o /home/app/models/easyocr/english_g2.zip
