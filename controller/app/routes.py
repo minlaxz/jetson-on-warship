@@ -5,19 +5,24 @@ import argparse
 import io
 import os
 import json
-from ultralytics import YOLO
-from flask import Flask, request, jsonify, make_response, render_template
 from PIL import Image
 import easyocr
 import numpy as np
 import cv2
+from ultralytics import YOLO
 
-lightstack = Flask(__name__)
+from flask import request, jsonify, make_response, render_template
+from flask import current_app as lightstack
+from .models import Record, db
+
 models = {}
 readers = {}
-
-
 DETECTION_URL = "/api/v1/object-detection/<model_name>"
+
+
+@lightstack.route("/", methods=["GET", "POST"])
+def root():
+    return render_template("index.html", records=[], host=request.host_url)
 
 
 def get_ocr(image, model_name):

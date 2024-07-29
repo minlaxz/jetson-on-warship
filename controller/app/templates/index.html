@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{{title}}</title>
+    <meta name="description" content="Group 1 - Computer vision inference" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#5eb9d7" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/favicon.png') }}"
+      type="image/x-icon"
+    />
+    <meta property="og:site_name" content="group1-vision" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Group 1 - Computer vision inference" />
+    <meta
+      property="og:description"
+      content="Group 1 - Computer vision inference"
+    />
+    <meta property="og:url" content="http://localhost/" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/style.css') }}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <meta name="theme-color" content="#5eb9d7" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/logo@2x.png') }}"
+      type="image/x-icon"
+    />
+  </head>
+
+  <body>
+    <h3>
+      <a
+        href="https://github.com/minlaxz/jetson-on-warship"
+        rel="noopener"
+        target="_blank"
+        >Group - 1</a
+      >
+      - Vision Inference Admin Panel
+    </h3>
+    <div class="container">
+      <form action="/" style="margin: 5%" method="post">
+        <div class="row" style="color: yellowgreen">
+          <div class="col">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Your Name"
+            />
+            <input
+              type="text"
+              id="plate"
+              name="plate"
+              placeholder="Your Plate"
+            />
+            <input
+              type="text"
+              id="car"
+              name="car"
+              placeholder="Your Car"
+            />
+            <input style="margin-left: 3%" type="submit" />
+            <table class="table table-dark table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Plate</th>
+                  <th scope="col">Car</th>
+                  <th scope="col">Created At</th>
+                  <th scope="col">Updated At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for record in records %}
+                <tr>
+                  <th scope="row">{{ record.id }}</th>
+                  <td>{{ record.name }}</td>
+                  <td>{{ record.plate }}</td>
+                  <td>{{ record.car }}</td>
+                  <td>{{ record.created_at }}</td>
+                  <td>{{ record.updated_at }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </div>
+        </div>
+      </form>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,33 +1,53 @@
+FROM ultralytics/ultralytics:latest-jetson-jetpack4 as base
+
+WORKDIR /usr/src/app
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && \
+    apt-get install --no-install-recommends \
+    vim nmap curl unzip -yqq
+
+COPY ./requirements.txt .
+RUN python3 -m pip install --upgrade \
+    && pip3 wheel --no-cache-dir --no-deps \
+    --wheel-dir /usr/src/app/wheels \
+    -r requirements.txt
+
+
 FROM ultralytics/ultralytics:latest-jetson-jetpack4
 
-WORKDIR /app
-RUN mkdir -p /app/models/easyocr
-# RUN mkdir -p /root/.cache/torch/hub/
+WORKDIR /home/app
+ENV MODELS_DIR=/home/app/models
 
-RUN apt-get update \
-    && apt-get install -y \
-    vim \
-    nmap \
-    curl \
-    unzip \
-    && apt-get clean
+# EasyOCR models
+RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip -o /craft_mlt_25k.zip
+RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip -o /english_g2.zip
+RUN mkdir -p /home/app/models/easyocr
+RUN unzip /craft_mlt_25k.zip -d /home/app/models/easyocr/
+RUN unzip /english_g2.zip -d /home/app/models/easyocr/
+RUN rm /craft_mlt_25k.zip /english_g2.zip
 
-COPY ./requirements.txt requirements.txt
-COPY ./app_v8.py app.py
+RUN rm -rf /usr/src/ultralytics/onnxruntime_gpu-1.8.0-cp38-cp38-linux_aarch64.whl \
+    /usr/src/ultralytics/tensorrt-8.2.0.6-cp38-none-linux_aarch64.whl \
+    /usr/src/ultralytics/torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl \
+    /usr/src/ultralytics/torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl
 
-RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip -o /app/models/easyocr/craft_mlt_25k.zip
-RUN curl -fsSL https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip -o /app/models/easyocr/english_g2.zip
+# Install dependencies
+RUN apt-get update && \
+    apt-get install --no-install-recommends \
+    vim nmap curl unzip -yqq && rm -rf /var/lib/apt/lists/*
+RUN useradd -m -d /home/app -s /bin/bash -c "Container User" -u 1000 app
+COPY --from=base /usr/src/app/wheels /wheels
+COPY --from=base /usr/src/app/requirements.txt .
+RUN pip3 install --no-cache /wheels/* && rm -rf /wheels
 
-RUN unzip /app/models/easyocr/craft_mlt_25k.zip -d /app/models/easyocr/
-RUN unzip /app/models/easyocr/english_g2.zip -d /app/models/easyocr/
+# Copy the application
+COPY ./controller/* .
 
-RUN rm /app/models/easyocr/craft_mlt_25k.zip && rm /app/models/easyocr/english_g2.zip
+RUN chown -R app:app .
+USER app
 
-RUN python3 -m pip install --upgrade pip
-RUN pip3 install -r requirements.txt
+EXPOSE 5000
 
-# RUN curl -fsSL https://github.com/ultralytics/yolov5/archive/master.zip -o /root/.cache/torch/hub/master.zip
-
-ENV MODELS_DIR=/app/models
-
-CMD ["gunicorn", "-w", "1", "--threads", "2", "-b", "0.0.0.0:5000", "app:lightstack"]
+CMD ["gunicorn", "-w", "1", "--threads", "2", "-b", "0.0.0.0:5000", "wsgi:lightstack"]
