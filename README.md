@@ -1,6 +1,8 @@
 Ultralytics YOLOv8 as Frigate Detector in Docker on Jetson Nano
 ===
 
+[![YOLOv8 REST API](https://github.com/minlaxz/jetson-on-warship/actions/workflows/yolo-rest-api-v8.yml/badge.svg)](https://github.com/minlaxz/jetson-on-warship/actions/workflows/yolo-rest-api-v8.yml)
+
 [Frigate](https://github.com/blakeblackshear/frigate) NVR (Network Video Recorder) on Jetson Nano (JP4) - using YOLOv8 as a detector.
 
 > Frigate officially supports `Deepstack` as one of their Object detectors but Deepstack isn't actively maintained and here's yet another one, lightstack (only focusing on object detection) and trained on YOLOv8 nano model.
