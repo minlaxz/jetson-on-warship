@@ -107,30 +107,26 @@ def predict(model_name):
     )
 
 
-def load_models(models_dir):
+def load_models(yolo_models_dir):
     """Load all YOLOv5 models from a given directory."""
-    model_files = [f for f in os.listdir(models_dir) if f.endswith(".engine")]
-    for model_file in model_files:
-        model_path = os.path.join(models_dir, model_file)
-        model_name = os.path.splitext(model_file)[
-            0
-        ]  # Use filename without extension as model name
+    yolo_model_files = [f for f in os.listdir(yolo_models_dir) if f.endswith(".engine")]
+    for yolo_model_file in yolo_model_files:
+        model_path = os.path.join(yolo_models_dir, yolo_model_file)
+        model_name = os.path.splitext(yolo_model_file)[0]
         print(f"Loading model: {model_name} from {model_path}")
-        # Load the model using YOLOv8
         models[model_name] = YOLO(model_path, task="detect")
-
         print("Loading OCR model")
         readers[model_name] = easyocr.Reader(
             ["en"],
-            model_storage_directory="/home/app/models/easyocr/",
+            model_storage_directory="/home/app/ocr_models/",
             download_enabled=False,
         )
 
 
 def initialize_app():
     """Initialize the app, loading models and any other setup tasks."""
-    models_dir = os.environ.get("MODELS_DIR", "/home/app/models/")
-    load_models(models_dir)
+    yolo_models_dir = os.environ.get("YOLO_MODELS_DIR", "/home/app/yolo_models/")
+    load_models(yolo_models_dir)
 
 
 # Call initialization
@@ -140,14 +136,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Flask API exposing YOLOv5 model")
     parser.add_argument("--port", default=5000, type=int, help="port number")
     parser.add_argument(
-        "--models-dir",
-        default="/home/app/models/",
-        help="directory containing model files",
+        "--yolo-models-dir",
+        default="/home/app/yolo_models/",
+        help="directory containing YOLO model files",
     )
     opt = parser.parse_args()
 
     # Set the models directory environment variable
-    os.environ["MODELS_DIR"] = opt.models_dir
+    os.environ["YOLO_MODELS_DIR"] = opt.yolo_models_dir
 
     # Load all models from the specified directory
     initialize_app()

@@ -43,4 +43,5 @@ services:
     ports:
       - "5001:5000"
     volumes:
-      - ./config/model_cache:/app/models
+      - ./yolo-models:/home/app/yolo_models
+      - ./ocr-models:/home/app/ocr_models
