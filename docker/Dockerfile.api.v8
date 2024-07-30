@@ -46,9 +46,12 @@ RUN apt-get update && \
     apt-get install --no-install-recommends \
     vim nmap curl unzip -yqq && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -d /home/app -s /bin/bash -c "Container User" -u 1000 app
-COPY --from=base /usr/src/app/wheels /wheels
-COPY --from=base /usr/src/app/requirements.txt .
-RUN pip3 install -U pip && pip3 install --no-cache /wheels/* && rm -rf /wheels
+
+# COPY --from=base /usr/src/app/wheels /wheels
+# COPY --from=base /usr/src/app/requirements.txt .
+# RUN pip3 install -U pip && pip3 install --no-cache /wheels/* && rm -rf /wheels
+COPY ./requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the application
 COPY ./controller .
