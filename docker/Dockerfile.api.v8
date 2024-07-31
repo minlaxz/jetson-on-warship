@@ -19,10 +19,10 @@ RUN rm ./ocr_models/*.zip
 # YOLO models
 RUN mkdir -p ./yolo_models
 
-RUN rm -rf /usr/src/ultralytics/onnxruntime_gpu-1.8.0-cp38-cp38-linux_aarch64.whl \
-    /usr/src/ultralytics/tensorrt-8.2.0.6-cp38-none-linux_aarch64.whl \
-    /usr/src/ultralytics/torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl \
-    /usr/src/ultralytics/torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl
+# RUN rm -rf /usr/src/ultralytics/onnxruntime_gpu-1.8.0-cp38-cp38-linux_aarch64.whl \
+#     /usr/src/ultralytics/tensorrt-8.2.0.6-cp38-none-linux_aarch64.whl \
+#     /usr/src/ultralytics/torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl \
+#     /usr/src/ultralytics/torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl
 
 # Install dependencies
 RUN apt-get update && \
