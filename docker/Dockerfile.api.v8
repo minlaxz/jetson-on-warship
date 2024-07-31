@@ -19,16 +19,15 @@ RUN rm ./ocr_models/*.zip
 # YOLO models
 RUN mkdir -p ./yolo_models
 
-# RUN rm -rf /usr/src/ultralytics/onnxruntime_gpu-1.8.0-cp38-cp38-linux_aarch64.whl \
-#     /usr/src/ultralytics/tensorrt-8.2.0.6-cp38-none-linux_aarch64.whl \
-#     /usr/src/ultralytics/torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl \
-#     /usr/src/ultralytics/torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl
+RUN rm -rf /usr/src/ultralytics/onnxruntime_gpu-1.8.0-cp38-cp38-linux_aarch64.whl \
+    /usr/src/ultralytics/tensorrt-8.2.0.6-cp38-none-linux_aarch64.whl \
+    /usr/src/ultralytics/torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl \
+    /usr/src/ultralytics/torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl
 
 # Install dependencies
 RUN apt-get update && \
     apt-get install --no-install-recommends \
     vim nmap curl unzip -yqq && rm -rf /var/lib/apt/lists/*
-RUN useradd -m -d /home/app -s /bin/bash -c "Container User" -u 1000 app
 
 # COPY --from=base /usr/src/app/wheels /wheels
 # COPY --from=base /usr/src/app/requirements.txt .
@@ -38,9 +37,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the application
 COPY ./controller .
-
-RUN chown -R app:app .
-USER app
 
 EXPOSE 5000
 
