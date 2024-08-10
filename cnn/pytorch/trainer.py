@@ -262,7 +262,7 @@ def train_model(
             correct += predicted.eq(labels).sum().item()
 
         train_accuracy = 100.0 * correct / total
-        val_accuracy = evaluate_model(model, valid_loader)
+        val_accuracy = evaluate_model(model, valid_loader, device)
 
         scheduler.step(val_accuracy)
 
@@ -272,7 +272,7 @@ def train_model(
 
 
 # Evaluation function
-def evaluate_model(model, dataloader):
+def evaluate_model(model, dataloader, device):
     model.eval()
     correct = 0
     total = 0
@@ -291,10 +291,10 @@ def evaluate_model(model, dataloader):
     return 100.0 * correct / total
 
 
-# Train the model
+# Train the model ! device is unnecessary
 train_model(model, train_loader, valid_loader, criterion, optimizer, scheduler, device)
 
-# Test the model
+# Test the model ! device is unnecessary
 test_accuracy = evaluate_model(model, test_loader, device)
 print(f"Test Accuracy: {test_accuracy}%")
 
@@ -320,5 +320,5 @@ def visualize_predictions(model, test_loader, label_word, num_images=50):
         )
         plt.show()
 
-
+# ! device is unnecessary
 # visualize_predictions(model, test_loader, label_word, device)
