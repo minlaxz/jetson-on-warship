@@ -88,6 +88,14 @@
                   <td>{{ i.owner }}</td>
                   <td>{{ i.plate }}</td>
                   <td>{{ i.model }}</td>
+                  <!-- delete button -->
+                  <td>
+                    <a
+                      href="/delete/{{ i.plate }}"
+                      class="btn btn-danger"
+                      style="color: white"
+                      >Delete</a
+                    >
                 </tr>
                 {% endfor %}
               </tbody>
