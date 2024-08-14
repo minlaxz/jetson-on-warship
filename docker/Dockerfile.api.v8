@@ -33,6 +33,7 @@ RUN apt-get update && \
 # COPY --from=base /usr/src/app/requirements.txt .
 # RUN pip3 install -U pip && pip3 install --no-cache /wheels/* && rm -rf /wheels
 COPY ./requirements.txt .
+RUN pip3 install -U pip
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the application

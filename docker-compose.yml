@@ -38,10 +38,15 @@ services:
   frigate-lightstack:
     image: ghcr.io/minlaxz/lightstack-api:yolov8-jp4
     # network_mode: "host" # Should be uncommented at first-time startup
+    privileged: true
     runtime: "nvidia"
     restart: unless-stopped
     ports:
       - "5001:5000"
     volumes:
-      - ./yolo-models:/home/app/yolo_models
-      - ./ocr-models:/home/app/ocr_models
+      - ./yolo_models:/home/app/yolo_models
+      - ./ocr_models:/home/app/ocr_models
+      - /proc/device-tree/compatible:/proc/device-tree/compatible
+      - /proc/device-tree/chosen:/proc/device-tree/chosen
+    devices:
+      - /dev/gpiochip0

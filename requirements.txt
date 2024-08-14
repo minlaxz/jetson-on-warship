@@ -5,4 +5,3 @@ gunicorn==22.0.0
 easyocr==1.7.1
 python-dotenv==1.0.1
 Jetson.GPIO==2.1.6
-packaging==24.1
