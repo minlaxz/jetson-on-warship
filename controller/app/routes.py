@@ -16,13 +16,32 @@ from flask import current_app as lightstack
 
 models = {}
 readers = {}
-records = {}
+database = {}
 DETECTION_URL = "/api/v1/object-detection/<model_name>"
 
 
-@lightstack.route("/", methods=["GET", "POST"])
+@lightstack.route("/", methods=["GET", "POST", "DELETE"])
 def root():
-    return render_template("index.html", records=[], host=request.host_url)
+    if request.method == "POST":
+        print(request.form)
+        owner = request.form.get("owner")
+        plate = request.form.get("plate")
+        model = request.form.get("model")
+        record = {
+            "owner": owner,
+            "plate": plate,
+            "model": model,
+        }
+        database["records"].append(record)
+        with open("records.json", "w") as f:
+            json.dump(database["records"], f)
+        return render_template("index.html", records=database["records"], host=request.host_url)
+    elif request.method == "DELETE":
+        database["records"] = []
+        with open("records.json", "w") as f:
+            json.dump(database["records"], f)
+        return render_template("index.html", records=database["records"], host=request.host_url)
+    return render_template("index.html", records=database["records"], host=request.host_url)
 
 def get_ocr(image, model_name):
     """Perform OCR on an image using the specified model name."""
@@ -152,8 +171,8 @@ def load_models(yolo_models_dir):
             download_enabled=False,
         )
     with open("records.json", "r") as f:
-        records["plates"] = json.load(f)
-    print(f"Records loaded: {records}")
+        database["records"] = json.load(f)
+    print(f"Records loaded: {database}")
     print("Models loaded")
 
 

@@ -1,23 +1,17 @@
 [
   {
-    "plate": "3H9057",
     "owner": "User 1",
-    "make": "Toyota",
-    "model": "Corolla",
-    "year": 2015
+    "plate": "3H9057",
+    "model": "Corolla"
   },
   {
-    "plate": "3H8057",
     "owner": "User 2",
-    "make": "Honda",
-    "model": "Civic",
-    "year": 2016
+    "plate": "3H8057",
+    "model": "Civic"
   },
   {
-    "plate": "3H7057",
     "owner": "User 3",
-    "make": "Ford",
-    "model": "Fiesta",
-    "year": 2017
+    "plate": "3H7057",
+    "model": "Fiesta"
   }
 ]

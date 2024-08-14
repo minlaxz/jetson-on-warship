@@ -57,43 +57,37 @@
           <div class="col">
             <input
               type="text"
-              id="name"
-              name="name"
-              placeholder="Your Name"
+              id="owner"
+              name="owner"
+              placeholder="Owner"
             />
             <input
               type="text"
               id="plate"
               name="plate"
-              placeholder="Your Plate"
+              placeholder="Plate"
             />
             <input
               type="text"
-              id="car"
-              name="car"
-              placeholder="Your Car"
+              id="model"
+              name="model"
+              placeholder="Model"
             />
             <input style="margin-left: 3%" type="submit" />
             <table class="table table-dark table-striped">
               <thead>
                 <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Name</th>
+                  <th scope="col">Owner</th>
                   <th scope="col">Plate</th>
-                  <th scope="col">Car</th>
-                  <th scope="col">Created At</th>
-                  <th scope="col">Updated At</th>
+                  <th scope="col">Model</th>
                 </tr>
               </thead>
               <tbody>
-                {% for record in records %}
+                {% for i in records %}
                 <tr>
-                  <th scope="row">{{ record.id }}</th>
-                  <td>{{ record.name }}</td>
-                  <td>{{ record.plate }}</td>
-                  <td>{{ record.car }}</td>
-                  <td>{{ record.created_at }}</td>
-                  <td>{{ record.updated_at }}</td>
+                  <td>{{ i.owner }}</td>
+                  <td>{{ i.plate }}</td>
+                  <td>{{ i.model }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
