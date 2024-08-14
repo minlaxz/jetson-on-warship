@@ -1,21 +1,21 @@
 [
   {
-    "plate": "AAA-1234",
-    "owner": "John Doe",
+    "plate": "3H9057",
+    "owner": "User 1",
     "make": "Toyota",
     "model": "Corolla",
     "year": 2015
   },
   {
-    "plate": "BBB-5678",
-    "owner": "Jane Doe",
+    "plate": "3H8057",
+    "owner": "User 2",
     "make": "Honda",
     "model": "Civic",
     "year": 2016
   },
   {
-    "plate": "CCC-9012",
-    "owner": "John Smith",
+    "plate": "3H7057",
+    "owner": "User 3",
     "make": "Ford",
     "model": "Fiesta",
     "year": 2017
