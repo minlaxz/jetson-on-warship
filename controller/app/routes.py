@@ -13,10 +13,10 @@ from ultralytics import YOLO
 
 from flask import request, jsonify, make_response, render_template
 from flask import current_app as lightstack
-from .models import Record, db
 
 models = {}
 readers = {}
+records = {}
 DETECTION_URL = "/api/v1/object-detection/<model_name>"
 
 
@@ -29,7 +29,13 @@ def get_ocr(image, model_name):
     """Perform OCR on an image using the specified model name."""
     image_np = np.array(image)
     image_zero = cv2.cvtColor(image_np, cv2.THRESH_TOZERO)
-    result = readers[model_name].readtext(image_zero)
+    result = readers[model_name].readtext(
+        image_zero,
+        detail=0,
+        allowlist="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        width_ths=1.5,
+        text_threshold=0.8,
+    )
     return result
 
 
@@ -83,7 +89,22 @@ def predict(model_name):
                     )
                     cropped_im = im.crop((x_min, y_min, x_max, y_max))
                     text = get_ocr(cropped_im, model_name)
-                    print(text)
+                    if len(text) >= 3:
+                        _division, _plate, _model = text[:3]
+                        others = text[3:]
+                    else:
+                        _division = text[0]
+                        _plate = text[1]
+                        _model = "Unknown"
+                        others = text[2:]
+                    predicted_text = f"Division:{_division} + Plate:{_plate} + Model:{_model}"
+                    print(predicted_text)
+                    print(others)
+                    # for i in records["plates"]:
+                    #     if i["plate"] == _plate:
+                    #         print("Found record")
+                    #     else:
+                    #         print("Not found")
                     # predictions[i]["text"] = str(text)
 
             return jsonify(
@@ -121,6 +142,10 @@ def load_models(yolo_models_dir):
             model_storage_directory="/home/app/ocr_models/",
             download_enabled=False,
         )
+    with open("records.json", "r") as f:
+        records["plates"] = json.load(f)
+    print(f"Records loaded {json.dump(records)}")
+    print("Models loaded")
 
 
 def initialize_app():
