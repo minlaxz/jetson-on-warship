@@ -144,7 +144,7 @@ def load_models(yolo_models_dir):
         )
     with open("records.json", "r") as f:
         records["plates"] = json.load(f)
-    print(f"Records loaded {json.dump(records)}")
+    print(f"Records loaded: {records}")
     print("Models loaded")
 
 
