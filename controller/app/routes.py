@@ -2,7 +2,6 @@
 """Run a Flask REST API exposing one or more YOLOv5 models."""
 
 import argparse
-from ast import List
 import io
 import os
 import json
@@ -25,9 +24,7 @@ DETECTION_URL = "/api/v1/object-detection/<model_name>"
 def root():
     return render_template("index.html", records=[], host=request.host_url)
 
-["YGN22", "3H1234", "DEMINO"]
-
-def get_ocr(image, model_name) -> List[str]:
+def get_ocr(image, model_name):
     """Perform OCR on an image using the specified model name."""
     image_np = np.array(image)
     image_zero = cv2.cvtColor(image_np, cv2.THRESH_TOZERO)
@@ -109,7 +106,7 @@ def predict(model_name):
                         _plate = "Unknown"
                         _model = "Unknown"
                         others = []
-                    predicted_text = f"Division:{_division} + Plate:{_plate} + Model:{_model}"
+                    predicted_text = f"Division: {_division} + Plate: {_plate} + Model: {_model}"
                     print(predicted_text)
                     print(others)
                     # for i in records["plates"]:
